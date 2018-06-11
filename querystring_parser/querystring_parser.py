@@ -24,7 +24,6 @@ except NameError:
     DEFAULT_ENCODING = None
 
 
-
 def has_variable_name(s):
     '''
     Variable name before [
@@ -112,6 +111,7 @@ def parser_helper(key, val):
         pdict[newkey] = val
     return pdict
 
+
 def parse(query_string, unquote=True, normalized=False, encoding=DEFAULT_ENCODING):
     '''
     Main parse function
@@ -122,22 +122,22 @@ def parse(query_string, unquote=True, normalized=False, encoding=DEFAULT_ENCODIN
 
     @param normalized: parse number key in dict to proper list ?
     '''
-    
+
     mydict = {}
     plist = []
     if query_string == "":
         return mydict
-    
+
     if type(query_string) == bytes:
-      query_string = query_string.decode()
-    
+        query_string = query_string.decode()
+
     for element in query_string.split("&"):
         try:
             if unquote:
                 (var, val) = element.split("=")
                 if sys.version_info[0] == 2:
-                  var = var.encode('ascii')
-                  val = val.encode('ascii')
+                    var = var.encode('ascii')
+                    val = val.encode('ascii')
                 var = urllib.unquote_plus(var)
                 val = urllib.unquote_plus(val)
             else:
@@ -161,7 +161,7 @@ def parse(query_string, unquote=True, normalized=False, encoding=DEFAULT_ENCODIN
         else:
             tempdict[k] = v
 
-    if normalized == True:
+    if normalized:
         return _normalize(mydict)
     return mydict
 
@@ -174,11 +174,11 @@ def _normalize(d):
 
     Note: if dict has element starts with 10, 11 etc.. this function won't fill
     blanks.
-    for eg: {'abc': {10: 'xyz', 12: 'pqr'}} will convert to 
+    for eg: {'abc': {10: 'xyz', 12: 'pqr'}} will convert to
     {'abc': ['xyz', 'pqr']}
     '''
     newd = {}
-    if isinstance(d, dict) == False:
+    if not isinstance(d, dict):
         return d
     # if dictionary. iterate over each element and append to newd
     for k, v in six.iteritems(d):
@@ -201,7 +201,7 @@ def _normalize(d):
 if __name__ == '__main__':
     """Compare speed with Django QueryDict"""
     from timeit import Timer
-    from tests import KnownValues
+    from querystring_tests import KnownValues
     import os
     import sys
     from django.core.management import setup_environ
